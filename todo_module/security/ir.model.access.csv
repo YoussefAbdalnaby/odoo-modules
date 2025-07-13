@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_todo_task_user,TODO Task User,model_todo_task,group_todo_user,1,1,1,0
-access_todo_task_manager,TODO Task Manager,model_todo_task,group_todo_manager,1,1,1,1
-access_todo_category_user,TODO Category User,model_todo_category,group_todo_user,1,0,0,0
-access_todo_category_manager,TODO Category Manager,model_todo_category,group_todo_manager,1,1,1,1
-access_todo_mass_update_user,TODO Mass Update User,model_todo_mass_update,group_todo_user,1,1,1,1
-access_todo_mass_update_manager,TODO Mass Update Manager,model_todo_mass_update,group_todo_manager,1,1,1,1
