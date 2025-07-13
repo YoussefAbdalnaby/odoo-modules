@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_todo_main"
+              name="TODO List" 
+              sequence="10"/>
+
+    <menuitem id="menu_todo_tasks"
+              name="Tasks" 
+              parent="menu_todo_main" 
+              action="action_todo_task" 
+              sequence="10"/>
+
+    <menuitem id="menu_todo_categories"
+              name="Categories" 
+              parent="menu_todo_main" 
+              action="action_todo_category" 
+              sequence="20"/>
+</odoo>
