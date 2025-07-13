@@ -13,7 +13,7 @@ Features:
 * Simple views for easy task tracking
 * Basic workflow for task completion
     """,
-    'author': 'Your Name',
+    'author': 'Youssef Abdalnaby',
     'depends': ['base'],
     'data': [
         'security/security.xml',
