@@ -1,0 +1,122 @@
+<odoo>
+    <data>
+<template id="report_session_styles">
+    <style>
+        .session-report-header {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .session-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .session-table thead tr {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .session-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .session-table tbody tr {
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .session-table td {
+            padding: 10px;
+            color: #495057;
+        }
+
+        .session-description-row {
+            background-color: #f8f9fa;
+        }
+
+        .session-description-text {
+            color: #6c757d;
+            font-style: italic;
+        }
+    </style>
+</template>
+
+<template id="report_session">
+    <t t-call="web.html_container">
+        <t t-call="web.internal_layout">
+            <div class="page">
+                <t t-call="openacademy.report_session_styles"/>
+
+                <div class="row mb-4">
+                    <div class="col">
+                        <h2 class="session-report-header">Session Report</h2>
+                        <p class="text-muted">Generated on:
+                            <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"/>
+                        </p>
+                    </div>
+                </div>
+
+                <table class="table session-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Course</th>
+                            <th>Instructor</th>
+                            <th>Date</th>
+                            <th>Duration</th>
+                            <th>Seats</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="docs" t-as="session">
+                            <tr>
+                                <td>
+                                    <span t-field="session.name"/>
+                                </td>
+                                <td>
+                                    <span t-field="session.course_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="session.instructor_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="session.start_date"/> to <span t-field="session.end_date"/>
+                                </td>
+                                <td>
+                                    <span t-field="session.duration"/> days
+                                </td>
+                                <td>
+                                    <span t-esc="session.taken_seats"/>%
+                                    (<span t-field="session.attendees_count"/>/<span t-field="session.seats"/>)
+                                </td>
+                            </tr>
+                            <tr t-if="session.description" class="session-description-row">
+                                <td colspan="6" class="session-description-text">
+                                    <strong>Description:</strong> <span t-field="session.description"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+
+
+        <record id="report_session_action" model="ir.actions.report">
+            <field name="name">Session Report</field>
+            <field name="model">openacademy.session</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">openacademy.report_session</field>
+            <field name="report_file">openacademy.report_session</field>
+            <field name="binding_model_id" ref="model_openacademy_session"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+        </record>
+    </data>
+</odoo>

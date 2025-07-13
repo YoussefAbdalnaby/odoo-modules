@@ -1,0 +1,212 @@
+<odoo>
+    <record model="ir.ui.view" id="session_form_view">
+        <field name="name">session.form</field>
+        <field name="model">openacademy.session</field>
+        <field name="arch" type="xml">
+            <form string="Session Management">
+
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Session Name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Session Details">
+                            <field name="course_id"/>
+                            <field name="instructor_id"/>
+                            <field name="start_date" string="start_date "/>
+                            <field name="duration" string="duration"/>
+                            <field name="description"/>
+                            <field name="active"/>
+
+
+                        </group>
+                        <group string="Capacity and Progress">
+                            <field name="seats" string="Available Seats"/>
+                            <field name="taken_seats" widget="progressbar" string="Occupancy Rate"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Attendees">
+                            <field name="attendee_id">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="email"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="session_tree_view">
+        <field name="name">session.tree</field>
+        <field name="model">openacademy.session</field>
+        <field name="arch" type="xml">
+            <tree string="Training Sessions" decoration-danger="seats&lt;15" decoration-info="seats&gt;15">
+                <field name="name" string="Session Title"/>
+                <field name="course_id" string="Course"/>
+                <field name="instructor_id" string="Instructor"/>
+                <field name="start_date" string="start_date "/>
+                <field name="duration" string="duration"/>
+                <field name="seats" string="Capacity"/>
+                <field name="taken_seats" widget="progressbar" string="Occupancy"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="session_search_view">
+        <field name="name">session.search</field>
+        <field name="model">openacademy.session</field>
+        <field name="arch" type="xml">
+            <search string="Search Sessions">
+                <field name="name" string="Session"/>
+                <field name="course_id" string="Course"/>
+                <field name="instructor_id" string="Instructor"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Course" name="group_course" domain="[]" context="{'group_by':'course_id'}"/>
+                    <filter string="Instructor" name="group_instructor" domain="[]"
+                            context="{'group_by':'instructor_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="session_calendar_view">
+        <field name="name">session.calendar</field>
+        <field name="model">openacademy.session</field>
+        <field name="arch" type="xml">
+            <calendar string="Session Calendar" date_start="start_date" date_stop="end_date" color="instructor_id">
+                <field name="name"/>
+                <field name="description"/>
+
+            </calendar>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="openacademy_session_graph_view">
+        <field name="name">openacademy.session.graph</field>
+        <field name="model">openacademy.session</field>
+        <field name="arch" type="xml">
+            <graph string="Participations by Courses">
+                <field name="course_id"/>
+                <field name="attendees_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="openacademy_session_pivot_view">
+        <field name="name">openacademy.session.pivot</field>
+        <field name="model">openacademy.session</field>
+        <field name="arch" type="xml">
+            <pivot string="Participations by Courses">
+                <field name="course_id"/>
+                <field name="attendees_count" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="openacademy_session_kanban_view">
+        <field name="name">openacademy.session.kanban</field>
+        <field name="model">openacademy.session</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="course_id">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="course_id"/>
+                <field name="instructor_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="duration"/>
+                <field name="seats"/>
+                <field name="attendees_count"/>
+                <field name="taken_seats"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="oe_kanban_header">
+                                    <strong>
+                                        <field name="name"/>
+                                    </strong>
+                                    <div class="oe_kanban_header_right">
+                                        <t t-if="!record.active.raw_value">
+                                            <span class="badge badge-secondary">Inactive</span>
+                                        </t>
+                                    </div>
+                                </div>
+
+                                <div class="oe_kanban_details">
+                                    <ul>
+                                        <li t-if="record.instructor_id.raw_value">
+                                            <i class="fa fa-user"/>
+                                            <field name="instructor_id"/>
+                                        </li>
+                                        <li t-if="record.start_date.raw_value">
+                                            <i class="fa fa-calendar"/>
+                                            <field name="start_date"/>
+                                            <t t-if="record.end_date.raw_value">-
+                                                <field name="end_date"/>
+                                            </t>
+                                        </li>
+                                        <li t-if="record.duration.raw_value">
+                                            <i class="fa fa-clock-o"/>
+                                            <field name="duration"/>
+                                            days
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="oe_kanban_footer">
+                                    <div class="oe_kanban_footer_left">
+                                        <span class="badge badge-primary">
+                                            <field name="attendees_count"/>
+                                            /
+                                            <field name="seats"/>
+                                            seats
+                                        </span>
+                                    </div>
+                                    <div class="oe_kanban_footer_right">
+                                        <div class="progress" style="width: 100px; height: 10px;">
+                                            <div class="progress-bar"
+                                                 t-att-style="'width: ' + Math.min(100, record.taken_seats.raw_value) + '%'"
+                                                 t-att-class="record.taken_seats.raw_value > 100 ? 'progress-bar-danger' : 'progress-bar-success'">
+                                            </div>
+                                        </div>
+                                        <small t-if="record.taken_seats.raw_value">
+                                            <t t-esc="Math.round(record.taken_seats.raw_value)"/>%
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="session_list_action">
+        <field name="name">Training Sessions</field>
+        <field name="res_model">openacademy.session</field>
+        <field name="view_mode">tree,form,calendar,graph,pivot,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Schedule your first training session!
+            </p>
+            <p>
+                Create engaging training sessions with proper capacity management and attendee tracking.
+            </p>
+        </field>
+    </record>
+
+
+</odoo>
